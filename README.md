@@ -1,4 +1,4 @@
-# React CLI
+# Josephine React CLI
 
 This package includes the global command for generate schematic file of component and component functional.
 
