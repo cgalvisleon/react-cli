@@ -1,0 +1,36 @@
+{
+  "name": "josephine",
+  "version": "1.2.4",
+  "description": "A simple react-cli",
+  "private": false,
+  "main": "./index.js",
+  "bin": {
+    "josephine": "./index.js"
+  },
+  "scripts": {
+    "lint": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cgalvisleon/react-cli.git"
+  },
+  "keywords": [
+    "react",
+    "react.js",
+    "react-cli",
+    "react-generate"
+  ],
+  "author": "cgalvisleon@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cgalvisleon/react-cli/issues"
+  },
+  "homepage": "https://github.com/cgalvisleon/react-cli#readme",
+  "devDependencies": {
+    "standard": "^14.3.1"
+  },
+  "dependencies": {
+    "args": "^5.0.1",
+    "mkdirp": "^1.0.3"
+  }
+}
