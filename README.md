@@ -9,23 +9,23 @@ npm install -g josephine
 ## Example Generate Component
 
 ```
-josephine generate --component my-new-component
-josephine g -c my-new-component # using the alias
+react generate --component my-new-component
+react g -c my-new-component # using the alias
 
 # components support realtive path generation
 # if in the directory src/app/components and you run
 
-josephine g -c new-cmp
+react g -c new-cmp
 
 # your component will be generated in src/app/components/new-cmp.js
 # but if you were to run
 
-josephine g -c ./new-cmp
+react g -c ./new-cmp
 
 # your component will be generated in src/app/components/new-cmp.js
 # if in the directory src/app
 
-josephine g -c ./component/new-cmp
+react g -c ./component/new-cmp
 
 # and your component will be generated in src/app/components/new-cmp.js
 ```
@@ -33,23 +33,23 @@ josephine g -c ./component/new-cmp
 ## Example Generate Component Functional
 
 ```
-josephine generate --function my-new-component
-josephine g -f my-new-component # using the alias
+react generate --function my-new-component
+react g -f my-new-component # using the alias
 
 # components support realtive path generation
 # if in the directory src/app/components and you run
 
-josephine g -f new-cmp
+react g -f new-cmp
 
 # your component will be generated in src/app/components/new-cmp.js
 # but if you were to run
 
-josephine g -f ./new-cmp
+react g -f ./new-cmp
 
 # your component will be generated in src/app/components/new-cmp.js
 # if in the directory src/app
 
-josephine g -f ./component/new-cmp
+react g -f ./component/new-cmp
 
 # and your component will be generated in src/app/components/new-cmp.js
 ```

@@ -9,6 +9,42 @@ args
   .option("name", "name of schematic")
   .command("generate", "Generate files based on a schematic", generate());
 
+function schemeFunction(name) {
+  return `import React from "react";
+  
+  function ${name}(props) {
+    return (
+      <React.Fragment>
+        <div>${name}</div>
+      </React.Fragment>
+    );
+  }  
+  
+export default ${name};
+`;
+}
+
+function schemeComponent(name) {
+  return `import React from "react";
+
+class ${name} extends React.Component {
+  constructor(props){
+    super(props);
+  }
+  
+  render() {
+    return (
+      <React.Fragment>
+        <div>${name}</div>
+      </React.Fragment>
+    );
+  }
+}
+
+export default ${name}; 
+`;
+}
+
 function fileExists(path) {
   try {
     if (fs.accessSync("/archivo.dat")) {
@@ -57,9 +93,11 @@ function writeFile(file, content) {
 
 function createFilename(file, content) {
   if (file.path.length > 0) {
-    if (!fileExists(file.path)) {
-      mkdirp(`./${file.path}`)
+    const path = `./src/${file.path}`;
+    if (!fileExists(path)) {
+      mkdirp(path)
         .then(() => {
+          file.path = path;
           writeFile(file, content);
         })
         .catch(err => {
@@ -67,7 +105,7 @@ function createFilename(file, content) {
         });
     }
   } else {
-    file.path = ".";
+    file.path = "./src";
     writeFile(file, content);
   }
 }
@@ -80,35 +118,13 @@ function generate() {
     const fileName = flags["c"];
     file = getFilename(fileName);
     const name = file.name.charAt(0).toUpperCase() + file.name.slice(1);
-    content = `
-    import React from "react";
-    
-    class ${name} extends React.Component {
-      constructor(props){
-        super(props);
-      }
-      
-      render() {
-        return <React.Fragment></React.Fragment>;
-      }
-    }
-
-    export default ${name};  
-    `;
+    content = schemeComponent(name);
     createFilename(file, content);
   } else if (flags["f"]) {
     const fileName = flags["f"];
     file = getFilename(fileName);
     const name = file.name.charAt(0).toUpperCase() + file.name.slice(1);
-    content = `
-    import React from "react";
-    
-    function ${name}(props) {
-      return <React.Fragment></React.Fragment>;
-    }  
-    
-    export default ${name};  
-    `;
+    content = schemeFunction(name);
     createFilename(file, content);
   }
 }
