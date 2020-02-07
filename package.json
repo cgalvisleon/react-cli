@@ -1,10 +1,9 @@
 {
   "name": "josephine",
-  "version": "1.2.12",
+  "version": "1.2.13",
   "description": "A simple react-cli",
   "private": false,
   "main": "./index.js",
-  "install": "npm i josephine -g",
   "bin": {
     "josephine": "./index.js",
     "react": "./index.js"
