@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-const args = require("args");
-const fs = require("fs");
-const mkdirp = require("mkdirp");
+const args = require('args');
+const fs = require('fs');
+const mkdirp = require('mkdirp');
 
 args
-  .option("function", "Schematic type component function")
-  .option("component", "Schematic type component")
-  .option("name", "name of schematic")
-  .command("generate", "Generate files based on a schematic", generate());
+  .option('function', 'Schematic type component function')
+  .option('component', 'Schematic type component')
+  .option('name', 'name of schematic')
+  .command('generate', 'Generate files based on a schematic', generate());
 
 function schemeFunction(name) {
   return `import React from "react";
@@ -47,7 +47,7 @@ export default ${name};
 
 function fileExists(path) {
   try {
-    if (fs.accessSync("/archivo.dat")) {
+    if (fs.accessSync(path)) {
       return true;
     }
   } catch (e) {
@@ -57,18 +57,18 @@ function fileExists(path) {
 
 function getFilename(value) {
   let result = {
-    name: "",
-    path: ""
+    name: '',
+    path: ''
   };
   if (value.length > 0) {
-    let path = value.split(".");
+    let path = value.split('.');
     path = path[0];
-    path = path.split("/");
+    path = path.split('/');
     const n = path.length;
     path.forEach(function(elemento, indice, array) {
       if (indice + 1 === n) {
         result.name = elemento;
-      } else if (result.path === "") {
+      } else if (result.path === '') {
         result.path = elemento;
       } else {
         result.path = `${result.path}/${elemento}`;
@@ -81,11 +81,11 @@ function getFilename(value) {
 function writeFile(file, content) {
   const name = `${file.path}/${file.name}`;
   if (!fileExists(name)) {
-    fs.writeFile(`${name}.js`, content, "utf8", err => {
+    fs.writeFile(`${name}.js`, content, 'utf8', err => {
       if (err) {
-        console.log("Error writing file", err);
+        console.log('Error writing file', err);
       } else {
-        console.log("Successfully write file");
+        console.log('Successfully write file');
       }
     });
   }
@@ -105,23 +105,23 @@ function createFilename(file, content) {
         });
     }
   } else {
-    file.path = "./src";
+    file.path = './src';
     writeFile(file, content);
   }
 }
 
 function generate() {
   const flags = args.parse(process.argv);
-  let content = "";
+  let content = '';
   let file = {};
-  if (flags["c"]) {
-    const fileName = flags["c"];
+  if (flags['c']) {
+    const fileName = flags['c'];
     file = getFilename(fileName);
     const name = file.name.charAt(0).toUpperCase() + file.name.slice(1);
     content = schemeComponent(name);
     createFilename(file, content);
-  } else if (flags["f"]) {
-    const fileName = flags["f"];
+  } else if (flags['f']) {
+    const fileName = flags['f'];
     file = getFilename(fileName);
     const name = file.name.charAt(0).toUpperCase() + file.name.slice(1);
     content = schemeFunction(name);
