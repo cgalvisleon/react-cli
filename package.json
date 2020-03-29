@@ -1,6 +1,6 @@
 {
   "name": "josephine",
-  "version": "1.2.14",
+  "version": "1.2.15",
   "description": "A simple react-cli",
   "private": false,
   "main": "./index.js",
@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/cgalvisleon/react-cli#readme",
   "devDependencies": {
-    "standard": "^14.3.1"
+    "standard": "^14.3.3"
   },
   "dependencies": {
     "args": "^5.0.1",
