@@ -1,6 +1,6 @@
 {
   "name": "josephine",
-  "version": "1.2.18",
+  "version": "1.2.19",
   "description": "A simple react-cli and other utilities",
   "private": false,
   "main": "./index.js",
