@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const uuidV4 = require('uuid/v4');
 const mime = require('./mime');
+const $ = require('jquery');
 
 const valid = function (a, b) {
   let result = false;
@@ -309,12 +310,24 @@ const now = function (_format) {
   return format(new Date(), _format);
 };
 
+const div = function (divisor, dividendo) {
+  if (dividendo === 0) {
+    return divisor;
+  } else {
+    return divisor / dividendo;
+  }
+};
+
 const number = function (value) {
   let result = Number(value);
   if (isNaN(result)) {
     result = 0;
   }
   return result;
+};
+
+const chart = function (str, int) {
+  return str.charAt(int);
 };
 
 const formatDate = function (date, _format) {
@@ -325,6 +338,20 @@ const formatDate = function (date, _format) {
 const formatDateTime = function (date, _format) {
   _format = _format || 'dd/MM/yyyy HH:mm aaaa';
   return format(new Date(date), _format);
+};
+
+const formatFloat = function (value, precision) {
+  precision = precision || 2;
+  if (value === undefined) {
+    return '0';
+  } else {
+    value = number(value);
+    value = value.toLocaleString('es-us', {
+      maximumFractionDigits: precision,
+      minimumFractionDigits: precision,
+    });
+    return `${value}`;
+  }
 };
 
 const formatNumber = function (value) {
@@ -338,6 +365,12 @@ const formatNumber = function (value) {
     });
     return `${value}`;
   }
+};
+
+const formatInteger = function (value) {
+  value = formatNumber(value);
+  value = value.toString().split(',')[0];
+  return value;
 };
 
 const formatMoney = function (value) {
@@ -358,6 +391,48 @@ const formatDHM = function (value) {
   const h = Math.trunc((value - d * 1440) / 60);
   const m = Math.trunc(value - d * 1440 - h * 60);
   return `${d}D ${h}H ${m}M`;
+};
+
+const getDifferenceInDays = function (data, fieldName, literal) {
+  const now = new Date();
+  let value = getValue(data, fieldName, now);
+  try {
+    value = new Date(value);
+    let days = 0;
+    if (value > now) {
+      days = differenceInDays(new Date(value), now);
+    } else {
+      days = differenceInDays(now, new Date(value));
+    }
+    if (literal) {
+      return days === 1 ? '1 día' : `${days} días`;
+    } else {
+      return days;
+    }
+  } catch {
+    return 0;
+  }
+};
+
+const getNumber = function (data, fieldName, _default) {
+  const value = getValue(data, fieldName, _default);
+  if (typeof value == 'number') {
+    return formatNumber(value, 2);
+  } else {
+    return value;
+  }
+};
+
+const setValue = function (data, fieldName, value) {
+  if (data === undefined || data === null) {
+    data = {};
+    data[fieldName] = value;
+  } else if (data[fieldName] === undefined || data[fieldName] === null) {
+    data[fieldName] = value;
+  } else {
+    data[fieldName] = value;
+  }
+  return data;
 };
 
 const getItem = function (list, index) {
@@ -384,7 +459,7 @@ const getRow = function (list, index, fieldName, _default) {
   }
 };
 
-const getNumber = function (list, index, fieldName, _default) {
+const getRowNumber = function (list, index, fieldName, _default) {
   _default = _default === undefined ? 0 : _default;
   const value = getRow(list, index, fieldName, _default);
   if (value === '') {
@@ -394,7 +469,7 @@ const getNumber = function (list, index, fieldName, _default) {
   }
 };
 
-const getMoney = function (list, index, fieldName, _default) {
+const getRowMoney = function (list, index, fieldName, _default) {
   _default = _default === undefined ? 0 : _default;
   const value = getRow(list, index, fieldName, _default);
   if (value === '') {
@@ -410,6 +485,37 @@ const jsonToString = function (value) {
 
 const jsonBlank = function (value) {
   return JSON.stringify(value) === '{}';
+};
+
+const setFocus = function (id) {
+  setTimeout(() => {
+    focus(id);
+  }, 1000);
+};
+
+const focus = function (id) {
+  $(`#${id}`).focus();
+};
+
+const toggle = function (id) {
+  $(`#${id}`).toggle();
+};
+
+const style = function (id, attr, value) {
+  $(`#${id}`).css(attr, value);
+};
+
+const showModal = function (id) {
+  $(`#${id}`).modal({
+    backdrop: 'static',
+    keyboard: false,
+    show: true,
+  });
+  setFocus(`${id}_caption`);
+};
+
+const hideModal = function (id) {
+  $(`#${id}`).modal('hide');
 };
 
 const respond = function (status, data, msg, message) {
@@ -434,9 +540,63 @@ const respond = function (status, data, msg, message) {
   }
 };
 
-const capitalize = function (s) {
+const section = function (s) {
   if (typeof s !== 'string') return '';
   return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
+const capitalize = function (s) {
+  if (typeof s !== 'string') return '';
+  return s.replace(/(?:^|\s)\S(?!^|\s)/g, function (a) {
+    return a.toUpperCase();
+  });
+};
+
+const phone = function (s) {
+  let cleaned = ('' + s).replace(/\D/g, '');
+  let match = cleaned.match(/^(\d{2})(\d{3})(\d{4})$/);
+  if (match) {
+    return ['(+', match[1], ') ', match[2], '-', match[3]].join('');
+  } else {
+    match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      return ['(', match[1], ') ', match[2], '-', match[3]].join('');
+    }
+  }
+  return cleaned;
+};
+
+const float = function (s) {
+  s = s.toString();
+  const a = s.split('.');
+  if (a.length > 1) {
+    s = `${a[0]}.${a[1]}`;
+  }
+  s = s.replace(/[a-zA-Z-*+/=<>,:;?^${}()|[\]\\`~!@#%&]/g, '');
+  return s;
+};
+
+const minicount = function (value) {
+  if (value > 999999999) {
+    const v = value / 1000000000;
+    const i = v.toString().split('.')[0];
+    const d = (v.toString().split('.')[1] || 0).toString().substring(0, 1) || 0;
+    return `${i}.${d}B`;
+  } else if (value > 999999) {
+    const v = value / 1000000;
+    const i = v.toString().split('.')[0];
+    const d = (v.toString().split('.')[1] || 0).toString().substring(0, 1) || 0;
+    return `${i}.${d}M`;
+  } else if (value > 999) {
+    const v = value / 1000;
+    const i = v.toString().split('.')[0];
+    const d = (v.toString().split('.')[1] || 0).toString().substring(0, 1) || 0;
+    return `${i}.${d}K`;
+  } else if (value <= 0 || !value) {
+    return '';
+  } else {
+    return formatInteger(value);
+  }
 };
 
 const appendStr = function (str, add, space) {
@@ -456,6 +616,36 @@ const MIME = function (ext) {
   return mime[ext] || '';
 };
 
+const clone = function (json) {
+  return JSON.parse(JSON.stringify(json));
+};
+
+const join = function (list, add, key) {
+  list = list || [];
+  let result = list;
+  add.map(function (item) {
+    const index = list.findIndex((element) => element[key] === item[key]);
+    if (index === -1) {
+      result.push(item);
+    }
+    return result;
+  });
+  return result;
+};
+
+const normalizeName = function (str) {
+  return str.replace(/ /g, '_').toLowerCase();
+};
+
+const charCode = function (str) {
+  let result = '';
+  for (var i = 0; i < str.length; i++) {
+    const c = str.charCodeAt(i);
+    result = `${result}${c}`;
+  }
+  return result;
+};
+
 module.exports = {
   equal,
   valid,
@@ -463,8 +653,8 @@ module.exports = {
   emptyValue,
   getItem,
   getRow,
-  getNumber,
-  getMoney,
+  getRowNumber,
+  getRowMoney,
   getValue,
   getData,
   getStringify,
@@ -486,16 +676,37 @@ module.exports = {
   validCellPhone,
   validValue,
   now,
+  div,
   number,
+  chart,
   formatDate,
   formatDateTime,
+  formatFloat,
   formatNumber,
+  formatInteger,
   formatMoney,
   formatDHM,
+  getDifferenceInDays,
+  getNumber,
+  setValue,
   jsonToString,
   jsonBlank,
+  setFocus,
+  focus,
+  toggle,
+  style,
+  showModal,
+  hideModal,
   respond,
+  section,
   capitalize,
+  phone,
+  float,
+  minicount,
   appendStr,
   MIME,
+  clone,
+  join,
+  normalizeName,
+  charCode,
 };
