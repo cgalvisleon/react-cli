@@ -1,0 +1,54 @@
+{
+  "name": "josephine",
+  "version": "1.2.50",
+  "description": "A simple react-cli and other utilities",
+  "private": false,
+  "main": "index.js",
+  "bin": {
+    "josephine": "index.js",
+    "react": "index.js"
+  },
+  "scripts": {
+    "lint": "standard",
+    "build": "npx babel src -d lib && cp package.json ./lib/package.json && cp README.md ./lib/README.md"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ],
+    "plugins": []
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cgalvisleon/react-cli.git"
+  },
+  "keywords": [
+    "react",
+    "react.js",
+    "react-cli",
+    "react-generate",
+    "generators",
+    "generate"
+  ],
+  "author": "cgalvisleon@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cgalvisleon/react-cli/issues"
+  },
+  "homepage": "https://github.com/cgalvisleon/react-cli#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.10.1",
+    "@babel/core": "^7.10.1",
+    "@babel/node": "^7.10.1",
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "standard": "^14.3.3"
+  },
+  "dependencies": {
+    "args": "^5.0.1",
+    "date-fns": "^2.9.0",
+    "jquery": "^3.5.1",
+    "mkdirp": "^1.0.3",
+    "uuid4": "^1.1.4"
+  }
+}

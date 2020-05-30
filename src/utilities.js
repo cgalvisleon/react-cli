@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const format = require('date-fns/format');
 const getUnixTime = require('date-fns/getUnixTime');
 const differenceInMinutes = require('date-fns/differenceInMinutes');
-const eoLocale = require('./locale/es-la');
+const { esLA } = require('./locale');
 const fs = require('fs');
 const path = require('path');
 const uuidV4 = require('uuid/v4');
@@ -334,8 +334,8 @@ const chart = function (str, int) {
 const formatDateTime = function (value, formato) {
   formato = formato || 'dd/MM/yyyy HH:mm a';
   try {
-    return format(new Date(value), formato, { locale: eoLocale });
-  } catch {
+    return format(new Date(value), formato, { locale: esLA });
+  } catch (err) {
     return value;
   }
 };
@@ -344,7 +344,7 @@ const formatDate = function (value, formato) {
   formato = formato || 'dd/MM/yyyy';
   try {
     return formatDateTime(new Date(value), formato);
-  } catch {
+  } catch (err) {
     return value;
   }
 };
@@ -418,7 +418,7 @@ const getDifferenceInDays = function (data, fieldName, literal) {
     } else {
       return days;
     }
-  } catch {
+  } catch (err) {
     return 0;
   }
 };
