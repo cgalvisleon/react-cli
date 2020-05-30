@@ -1,17 +1,17 @@
 {
   "name": "josephine",
-  "version": "1.2.37",
+  "version": "1.2.38",
   "description": "A simple react-cli and other utilities",
   "private": false,
-  "main": "index.js",
+  "main": "lib/index.js",
   "bin": {
-    "josephine": "index.js",
-    "react": "index.js"
+    "josephine": "lib/index.js",
+    "react": "lib/index.js"
   },
   "scripts": {
     "lint": "standard",
     "prepare": "npm run build",
-    "build": "webpack -p"
+    "build": "npx babel src --out-dir lib"
   },
   "repository": {
     "type": "git",
@@ -34,20 +34,13 @@
   "devDependencies": {
     "@babel/cli": "^7.10.1",
     "@babel/core": "^7.10.1",
-    "@babel/preset-env": "^7.10.1",
-    "standard": "^14.3.3",
-    "html-webpack-plugin": "^4.3.0",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.11.0"
+    "standard": "^14.3.3"
   },
   "dependencies": {
     "args": "^5.0.1",
-    "babel-loader": "^8.1.0",
     "date-fns": "^2.9.0",
     "jquery": "^3.5.1",
     "mkdirp": "^1.0.3",
-    "uuid4": "^1.1.4",
-    "@babel/polyfill": "^7.10.1"
+    "uuid4": "^1.1.4"
   }
 }
