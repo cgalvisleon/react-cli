@@ -1,6 +1,6 @@
 {
   "name": "josephine",
-  "version": "1.2.35",
+  "version": "1.2.36",
   "description": "A simple react-cli and other utilities",
   "private": false,
   "main": "index.js",
@@ -11,7 +11,7 @@
   "scripts": {
     "lint": "standard",
     "prepare": "npm run build",
-    "build": "webpack"
+    "build": "webpack -p"
   },
   "repository": {
     "type": "git",
