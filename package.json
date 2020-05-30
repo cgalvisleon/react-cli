@@ -1,12 +1,13 @@
 {
   "name": "josephine",
-  "version": "1.2.38",
+  "version": "1.2.39",
   "description": "A simple react-cli and other utilities",
   "private": false,
   "main": "lib/index.js",
   "bin": {
     "josephine": "lib/index.js",
-    "react": "lib/index.js"
+    "react": "lib/index.js",
+    "utilities": "lib/utilities.js"
   },
   "scripts": {
     "lint": "standard",
