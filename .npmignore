@@ -1,3 +1,4 @@
 npm.md
-
-/demo
+/src
+.babelrc
+webpack.config.js
