@@ -1,6 +1,6 @@
 {
   "name": "josephine",
-  "version": "1.2.32",
+  "version": "1.2.33",
   "description": "A simple react-cli and other utilities",
   "private": false,
   "main": "./index.js",
@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "args": "^5.0.1",
+    "babel": "^6.23.0",
     "date-fns": "^2.9.0",
     "jquery": "^3.5.1",
     "mkdirp": "^1.0.3",
