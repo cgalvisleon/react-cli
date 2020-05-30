@@ -1,6 +1,6 @@
 {
   "name": "josephine",
-  "version": "1.2.41",
+  "version": "1.2.42",
   "description": "A simple react-cli and other utilities",
   "private": false,
   "main": "index.js",
@@ -11,7 +11,7 @@
   "scripts": {
     "lint": "standard",
     "prepare": "npm run build",
-    "build": "npx babel src -d ."
+    "build": "npx babel src -d lib && cp package.json ./lib/package.json && cp README.md ./lib/README.md"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,7 @@
   "devDependencies": {
     "@babel/cli": "^7.10.1",
     "@babel/core": "^7.10.1",
+    "@babel/node": "^7.10.1",
     "standard": "^14.3.3"
   },
   "dependencies": {
