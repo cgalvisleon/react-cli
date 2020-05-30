@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const format = require('date-fns/format');
 const getUnixTime = require('date-fns/getUnixTime');
 const differenceInMinutes = require('date-fns/differenceInMinutes');
+const eoLocale = require('./locale/es-la');
 const fs = require('fs');
 const path = require('path');
 const uuidV4 = require('uuid/v4');
@@ -164,7 +165,7 @@ const getDateTime = function (data, fieldName, _default) {
   _default = _default || new Date();
   const date = getValue(data, fieldName, _default);
   try {
-    return format(new Date(date), "yyyy-MM-dd'T'HH:mm:ss");
+    return formatDate(new Date(date), "yyyy-MM-dd'T'HH:mm:ss");
   } catch (err) {
     return date;
   }
@@ -174,7 +175,7 @@ const getDate = function (data, fieldName, _default) {
   _default = _default || new Date();
   const date = getValue(data, fieldName, _default);
   try {
-    return format(new Date(date), 'yyyy-MM-dd');
+    return formatDate(new Date(date), 'yyyy-MM-dd');
   } catch (err) {
     return date;
   }
@@ -188,7 +189,7 @@ const getDateFormat = function (data, fieldName, _format, _default) {
     return date;
   } else {
     try {
-      return format(new Date(date), _format);
+      return formatDateTime(new Date(date), _format);
     } catch (err) {
       return date;
     }
@@ -199,7 +200,7 @@ const getTime = function (data, fieldName, _default) {
   _default = _default || new Date();
   const date = getValue(data, fieldName, _default);
   try {
-    return format(new Date(date), 'HH:mm:ss');
+    return formatDate(new Date(date), 'HH:mm:ss');
   } catch (err) {
     return date;
   }
@@ -307,7 +308,7 @@ const validValue = function (data, fieldName, valid, _default) {
 
 const now = function (_format) {
   _format = _format === undefined ? 'dd/MM/yyyy HH:mm:SSSS' : _format;
-  return format(new Date(), _format);
+  return formatDate(new Date(), _format);
 };
 
 const div = function (divisor, dividendo) {
@@ -330,14 +331,22 @@ const chart = function (str, int) {
   return str.charAt(int);
 };
 
-const formatDate = function (date, _format) {
-  _format = _format || 'dd/MM/yyyy';
-  return format(new Date(date), _format);
+const formatDateTime = function (value, formato) {
+  formato = formato || 'dd/MM/yyyy HH:mm a';
+  try {
+    return format(new Date(value), formato, { locale: eoLocale });
+  } catch {
+    return value;
+  }
 };
 
-const formatDateTime = function (date, _format) {
-  _format = _format || 'dd/MM/yyyy HH:mm aaaa';
-  return format(new Date(date), _format);
+const formatDate = function (value, formato) {
+  formato = formato || 'dd/MM/yyyy';
+  try {
+    return formatDateTime(new Date(value), formato);
+  } catch {
+    return value;
+  }
 };
 
 const formatFloat = function (value, precision) {
