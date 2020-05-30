@@ -1,17 +1,17 @@
 {
   "name": "josephine",
-  "version": "1.2.40",
+  "version": "1.2.41",
   "description": "A simple react-cli and other utilities",
   "private": false,
-  "main": "lib/index.js",
+  "main": "index.js",
   "bin": {
-    "josephine": "lib/index.js",
-    "react": "lib/index.js"
+    "josephine": "index.js",
+    "react": "index.js"
   },
   "scripts": {
     "lint": "standard",
     "prepare": "npm run build",
-    "build": "npx babel src --out-dir lib"
+    "build": "npx babel src -d ."
   },
   "repository": {
     "type": "git",
