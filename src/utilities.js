@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const format = require('date-fns/format');
 const getUnixTime = require('date-fns/getUnixTime');
 const differenceInMinutes = require('date-fns/differenceInMinutes');
-const { esLA } = require('./locale');
+const { esLA } = require('./locale/index');
 const fs = require('fs');
 const path = require('path');
 const uuidV4 = require('uuid/v4');
@@ -189,7 +189,7 @@ const getDateFormat = function (data, fieldName, _format, _default) {
     return date;
   } else {
     try {
-      return formatDateTime(new Date(date), _format);
+      return formatDate(new Date(date), _format);
     } catch (err) {
       return date;
     }
@@ -219,6 +219,36 @@ const getDateDifference = function (data, fieldDateInt, fieldDateEnd, exclude) {
     }
   } catch (err) {
     return 0;
+  }
+};
+
+const getDifferenceInDays = function (data, fieldName, literal) {
+  const now = new Date();
+  let value = getValue(data, fieldName, now);
+  try {
+    value = new Date(value);
+    let days = 0;
+    if (value > now) {
+      days = differenceInDays(new Date(value), now);
+    } else {
+      days = differenceInDays(now, new Date(value));
+    }
+    if (literal) {
+      return days === 1 ? '1 día' : `${days} días`;
+    } else {
+      return days;
+    }
+  } catch (err) {
+    return 0;
+  }
+};
+
+const getNumber = function (data, fieldName, _default) {
+  const value = getValue(data, fieldName, _default);
+  if (typeof value == 'number') {
+    return formatNumber(value, 2);
+  } else {
+    return value;
   }
 };
 
@@ -274,6 +304,50 @@ const genImgBase64 = function (fileName) {
   return `data:image/${ext.split('.').pop()};base64,${base64}`;
 };
 
+const getItem = function (list, index) {
+  if (list === undefined) {
+    return {};
+  } else if (list[index] === undefined) {
+    return {};
+  } else {
+    return list[index];
+  }
+};
+
+const getRow = function (list, index, fieldName, _default) {
+  if (list === undefined) {
+    return _default;
+  } else if (list[index] === undefined) {
+    return _default;
+  } else if (list[index][fieldName] === undefined) {
+    return _default;
+  } else if (list[index][fieldName] === null) {
+    return _default;
+  } else {
+    return list[index][fieldName];
+  }
+};
+
+const getRowNumber = function (list, index, fieldName, _default) {
+  _default = _default === undefined ? 0 : _default;
+  const value = getRow(list, index, fieldName, _default);
+  if (value === '') {
+    return _default;
+  } else {
+    return formatNumber(value);
+  }
+};
+
+const getRowMoney = function (list, index, fieldName, _default) {
+  _default = _default === undefined ? 0 : _default;
+  const value = getRow(list, index, fieldName, _default);
+  if (value === '') {
+    return _default;
+  } else {
+    return formatMoney(value);
+  }
+};
+
 const validStr = function (val, len) {
   len = len || 0;
   if (val === null) {
@@ -307,8 +381,9 @@ const validValue = function (data, fieldName, valid, _default) {
 };
 
 const now = function (_format) {
+  const date = new Date();
   _format = _format === undefined ? 'dd/MM/yyyy HH:mm:SSSS' : _format;
-  return formatDate(new Date(), _format);
+  return formatDate(date, _format);
 };
 
 const div = function (divisor, dividendo) {
@@ -331,19 +406,10 @@ const chart = function (str, int) {
   return str.charAt(int);
 };
 
-const formatDateTime = function (value, formato) {
-  formato = formato || 'dd/MM/yyyy HH:mm a';
+const formatDate = function (value, formato) {
+  formato = formato || 'dd/MM/yyyy'; /** 'dd/MM/yyyy HH:mm a' */
   try {
     return format(new Date(value), formato, { locale: esLA });
-  } catch (err) {
-    return value;
-  }
-};
-
-const formatDate = function (value, formato) {
-  formato = formato || 'dd/MM/yyyy';
-  try {
-    return formatDateTime(new Date(value), formato);
   } catch (err) {
     return value;
   }
@@ -402,36 +468,6 @@ const formatDHM = function (value) {
   return `${d}D ${h}H ${m}M`;
 };
 
-const getDifferenceInDays = function (data, fieldName, literal) {
-  const now = new Date();
-  let value = getValue(data, fieldName, now);
-  try {
-    value = new Date(value);
-    let days = 0;
-    if (value > now) {
-      days = differenceInDays(new Date(value), now);
-    } else {
-      days = differenceInDays(now, new Date(value));
-    }
-    if (literal) {
-      return days === 1 ? '1 día' : `${days} días`;
-    } else {
-      return days;
-    }
-  } catch (err) {
-    return 0;
-  }
-};
-
-const getNumber = function (data, fieldName, _default) {
-  const value = getValue(data, fieldName, _default);
-  if (typeof value == 'number') {
-    return formatNumber(value, 2);
-  } else {
-    return value;
-  }
-};
-
 const setValue = function (data, fieldName, value) {
   if (data === undefined || data === null) {
     data = {};
@@ -442,58 +478,6 @@ const setValue = function (data, fieldName, value) {
     data[fieldName] = value;
   }
   return data;
-};
-
-const getItem = function (list, index) {
-  if (list === undefined) {
-    return {};
-  } else if (list[index] === undefined) {
-    return {};
-  } else {
-    return list[index];
-  }
-};
-
-const getRow = function (list, index, fieldName, _default) {
-  if (list === undefined) {
-    return _default;
-  } else if (list[index] === undefined) {
-    return _default;
-  } else if (list[index][fieldName] === undefined) {
-    return _default;
-  } else if (list[index][fieldName] === null) {
-    return _default;
-  } else {
-    return list[index][fieldName];
-  }
-};
-
-const getRowNumber = function (list, index, fieldName, _default) {
-  _default = _default === undefined ? 0 : _default;
-  const value = getRow(list, index, fieldName, _default);
-  if (value === '') {
-    return _default;
-  } else {
-    return formatNumber(value);
-  }
-};
-
-const getRowMoney = function (list, index, fieldName, _default) {
-  _default = _default === undefined ? 0 : _default;
-  const value = getRow(list, index, fieldName, _default);
-  if (value === '') {
-    return _default;
-  } else {
-    return formatMoney(value);
-  }
-};
-
-const jsonToString = function (value) {
-  return JSON.stringify(value);
-};
-
-const jsonBlank = function (value) {
-  return JSON.stringify(value) === '{}';
 };
 
 const setFocus = function (id) {
@@ -525,6 +509,14 @@ const showModal = function (id) {
 
 const hideModal = function (id) {
   $(`#${id}`).modal('hide');
+};
+
+const jsonToString = function (value) {
+  return JSON.stringify(value);
+};
+
+const jsonBlank = function (value) {
+  return JSON.stringify(value) === '{}';
 };
 
 const respond = function (status, data, msg, message) {
@@ -642,6 +634,39 @@ const join = function (list, add, key) {
   return result;
 };
 
+const updateList = function (list, item) {
+  const filter = (select) => select._id === item._id;
+  const result = list;
+  const index = result.list.findIndex(filter);
+  if (index === -1) {
+    if (item._state === result.state || result.state === 'ALL') {
+      result.all = result.all + 1;
+      result.end = result.end + 1;
+      result.rows = result.rows + 1;
+      result.count = result.count + 1;
+      result.list.unshift(item);
+    }
+  } else {
+    if (item._state === result.state || result.state === 'ALL') {
+      result.list[index] = item;
+    } else if (result.list[index].delete) {
+      result.all = result.all + 1;
+      result.end = result.end + 1;
+      result.rows = result.rows + 1;
+      result.count = result.count + 1;
+      result.list[index] = item;
+    } else {
+      result.all = result.all - 1;
+      result.end = result.end - 1;
+      result.rows = result.rows - 1;
+      result.count = result.count - 1;
+      result.list[index] = item;
+      result.list[index].delete = true;
+    }
+  }
+  return result;
+};
+
 const normalizeName = function (str) {
   return str.replace(/ /g, '_').toLowerCase();
 };
@@ -660,10 +685,6 @@ module.exports = {
   valid,
   cryptoMd5,
   emptyValue,
-  getItem,
-  getRow,
-  getRowNumber,
-  getRowMoney,
   getValue,
   getData,
   getStringify,
@@ -674,12 +695,18 @@ module.exports = {
   getDateFormat,
   getTime,
   getDateDifference,
+  getDifferenceInDays,
+  getNumber,
   getPassword,
+  getPayload,
+  getId,
   genId,
   genFileName,
   genImgBase64,
-  getPayload,
-  getId,
+  getItem,
+  getRow,
+  getRowNumber,
+  getRowMoney,
   validStr,
   validEmail,
   validCellPhone,
@@ -689,23 +716,20 @@ module.exports = {
   number,
   chart,
   formatDate,
-  formatDateTime,
   formatFloat,
   formatNumber,
   formatInteger,
   formatMoney,
   formatDHM,
-  getDifferenceInDays,
-  getNumber,
   setValue,
-  jsonToString,
-  jsonBlank,
   setFocus,
   focus,
   toggle,
   style,
   showModal,
   hideModal,
+  jsonToString,
+  jsonBlank,
   respond,
   section,
   capitalize,
@@ -716,6 +740,7 @@ module.exports = {
   MIME,
   clone,
   join,
+  updateList,
   normalizeName,
   charCode,
 };
