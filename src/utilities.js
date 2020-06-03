@@ -533,8 +533,8 @@ const respond = function (status, data, msg, message) {
     return {
       status: status || 200,
       results: {
-        msg: 'NOTFIND',
-        message: 'Dato no encontrado',
+        msg: msg || 'NOTFIND',
+        message: message || 'Dato no encontrado',
         data: data || {},
       },
     };
