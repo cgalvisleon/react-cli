@@ -252,6 +252,15 @@ const getNumber = function (data, fieldName, _default) {
   }
 };
 
+const getMoney = function (data, fieldName, _default) {
+  const value = getValue(data, fieldName, _default);
+  if (typeof value == 'number') {
+    return formatMoney(value);
+  } else {
+    return value;
+  }
+};
+
 const getPassword = function (data, fieldName) {
   if (data === undefined || data === null) {
     return '';
@@ -697,6 +706,7 @@ module.exports = {
   getDateDifference,
   getDifferenceInDays,
   getNumber,
+  getMoney,
   getPassword,
   getPayload,
   getId,
