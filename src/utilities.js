@@ -357,6 +357,11 @@ const getRowMoney = function (list, index, fieldName, _default) {
   }
 };
 
+const getRowData = function (list, row, fieldName, _default) {
+  const item = getItem(list, row);
+  return getData(item, fieldName, _default);
+};
+
 const validStr = function (val, len) {
   len = len || 0;
   if (val === null) {
@@ -529,25 +534,14 @@ const jsonBlank = function (value) {
 };
 
 const respond = function (status, data, msg, message) {
-  if (Object.keys(data).length === 0) {
-    return {
-      status: status || 200,
-      results: {
-        msg: msg || 'NOTFIND',
-        message: message || 'Dato no encontrado',
-        data: data || {},
-      },
-    };
-  } else {
-    return {
-      status: status || 200,
-      results: {
-        msg: msg || '',
-        message: message || '',
-        data: data || {},
-      },
-    };
-  }
+  return {
+    status: status || 200,
+    results: {
+      msg: msg || '',
+      message: message || '',
+      data: data || {},
+    },
+  };
 };
 
 const section = function (s) {
@@ -717,6 +711,7 @@ module.exports = {
   getRow,
   getRowNumber,
   getRowMoney,
+  getRowData,
   validStr,
   validEmail,
   validCellPhone,
