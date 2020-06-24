@@ -108,7 +108,6 @@ const emptyValue = function (data, fieldName, _default) {
 };
 
 const getValue = function (data, fieldName, _default) {
-  _default = _default || '';
   if (data === undefined || data === null) {
     return _default;
   } else if (data[fieldName] === undefined || data[fieldName] === null) {
