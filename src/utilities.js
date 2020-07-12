@@ -475,10 +475,13 @@ const formatMoney = function (value) {
 };
 
 const formatDHM = function (value) {
-  const d = Math.trunc(value / 1440);
-  const h = Math.trunc((value - d * 1440) / 60);
-  const m = Math.trunc(value - d * 1440 - h * 60);
-  return `${d}D ${h}H ${m}M`;
+  let M = Math.trunc(value / 43200);
+  let Y = Math.trunc(M / 12);
+  let d = Math.trunc((value - M * 43200) / 1440);
+  let h = Math.trunc((value - M * 43200 - d * 1440) / 60);
+  let m = Math.trunc(value - M * 43200 - d * 1440 - h * 60);
+  M = Math.trunc(M - Y * 12);
+  return Y > 0 ? `${Y}A ${M}M ${d}D ${h}H ${m}M` : M > 0 ? `${M}M ${d}D ${h}H ${m}M` : `${d}D ${h}H ${m}M`;
 };
 
 const setValue = function (data, fieldName, value) {
