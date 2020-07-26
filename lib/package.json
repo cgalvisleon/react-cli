@@ -1,6 +1,6 @@
 {
   "name": "josephine",
-  "version": "1.2.71",
+  "version": "1.2.79",
   "description": "A simple react-cli and other utilities",
   "private": false,
   "main": "index.js",
@@ -55,11 +55,8 @@
   },
   "dependencies": {
     "args": "^5.0.1",
-    "date-fns": "^2.9.0",
-    "jquery": "^3.5.1",
     "mkdirp": "^1.0.3",
     "tsutils": "^3.17.1",
-    "typescript": "^3.9.3",
-    "uuid4": "^1.1.4"
+    "typescript": "^3.9.3"
   }
 }
