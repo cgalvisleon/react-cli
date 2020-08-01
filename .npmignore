@@ -2,3 +2,4 @@ npm.md
 /src
 .babelrc
 webpack.config.js
+.package-lock.json
